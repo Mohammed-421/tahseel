@@ -170,7 +170,7 @@ async function loadToday(){
 }
 
 function init(){
-  document.getElementById('f-date').value = today();
+  var y = new Date(); y.setDate(y.getDate()-1); document.getElementById('f-date').value = y.toISOString().split('T')[0];
   loadToday();
   setInterval(loadToday, 30000);
 }
