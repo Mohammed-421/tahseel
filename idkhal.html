@@ -150,7 +150,7 @@ async function saveEntry(){
 
 async function loadToday(){
   try {
-    var res = await fetch(SURL+'/rest/v1/tahseel_entries?entry_date=eq.'+today()+'&order=created_at.desc', {
+   var res = await fetch(SURL+'/rest/v1/tahseel_entries?entry_date=eq.'+document.getElementById('f-date').value+'&order=created_at.desc', {
       headers:{'apikey':SKEY,'Authorization':'Bearer '+SKEY}
     });
     var data = await res.json();
