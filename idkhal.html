@@ -1,1 +1,255 @@
-<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>إدخال التحصيل</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Tahoma,sans-serif;background:#0f1117;color:#e8eaf6;min-height:100vh;direction:rtl}.header{background:#1a1d27;border-bottom:1px solid #2e3350;padding:16px 20px;display:flex;justify-content:space-between;align-items:center}.header h1{font-size:16px;font-weight:700}.header h1 span{color:#4f8ef7}.badge{font-size:11px;color:#8b92b8;background:#22263a;padding:4px 10px;border-radius:20px;border:1px solid #2e3350}.main{padding:20px;max-width:500px;margin:0 auto}.card{background:#1a1d27;border:1px solid #2e3350;border-radius:12px;padding:20px;margin-bottom:16px}.card-title{font-size:14px;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:8px}.card-title::before{content:'';width:3px;height:16px;background:#4f8ef7;border-radius:2px;display:inline-block}.fg{margin-bottom:14px}.fg label{font-size:12px;color:#8b92b8;display:block;margin-bottom:5px}.fg input{background:#22263a;border:1px solid #2e3350;border-radius:8px;padding:10px 13px;color:#e8eaf6;font-size:14px;outline:none;width:100%;font-family:Tahoma,sans-serif}.fg input[type=date]{direction:ltr}.fg input[type=file]{padding:8px 13px;cursor:pointer}.fg input:focus{border-color:#4f8ef7}.btn{width:100%;padding:12px;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;font-family:Tahoma,sans-serif}.btn-blue{background:#4f8ef7;color:#fff}.btn-blue:disabled{background:#2e3350;color:#8b92b8;cursor:not-allowed}.login-box{background:#1a1d27;border:1px solid #2e3350;border-radius:12px;padding:32px 24px;max-width:380px;margin:80px auto}.login-title{font-size:18px;font-weight:700;text-align:center;margin-bottom:6px}.login-sub{font-size:13px;color:#8b92b8;text-align:center;margin-bottom:24px}.login-error{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#ef4444;border-radius:8px;padding:10px;font-size:13px;text-align:center;margin-bottom:14px;display:none}.summary{background:#22263a;border-radius:8px;padding:12px;margin-bottom:14px}.summary-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #2e3350;font-size:13px}.summary-row:last-child{border-bottom:none;font-weight:700;font-size:14px;color:#4f8ef7}.records{margin-top:8px}.record-item{background:#22263a;border-radius:8px;padding:12px;margin-bottom:8px}.record-name{font-size:14px;font-weight:600}.record-amt{font-size:16px;font-weight:700;color:#4f8ef7}.record-date{font-size:11px;color:#8b92b8;margin-top:2px}.locked{font-size:10px;color:#22c55e;background:rgba(34,197,94,.1);padding:2px 8px;border-radius:10px}.img-thumb{width:60px;height:60px;object-fit:cover;border-radius:6px;border:1px solid #2e3350;cursor:pointer;margin-top:6px}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);padding:10px 20px;border-radius:8px;font-size:13px;font-weight:600;z-index:999;transition:transform .3s;pointer-events:none;white-space:nowrap}.toast.show{transform:translateX(-50%) translateY(0)}.empty{text-align:center;padding:24px;color:#8b92b8;font-size:13px}.lightbox{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.9);z-index:9999;justify-content:center;align-items:center}.lightbox img{max-width:90%;max-height:90%;border-radius:8px}.lightbox.show{display:flex}</style></head><body><div id="login-page"><div class="login-box"><div style="text-align:center;font-size:32px;margin-bottom:12px">🔐</div><div class="login-title">نظام التحصيل النقدي</div><div class="login-sub">أدخل كلمة المرور للدخول</div><div class="login-error" id="login-error">كلمة المرور غير صحيحة</div><div class="fg"><label>كلمة المرور</label><input type="password" id="pass-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')checkPass()"></div><button class="btn btn-blue" onclick="checkPass()">دخول ←</button></div></div><div id="app-page" style="display:none"><div class="header"><h1>📋 إدخال <span>التحصيل</span></h1><div style="display:flex;gap:8px;align-items:center"><div class="badge">مسؤول التسجيل</div><button onclick="logout()" style="background:transparent;border:1px solid #2e3350;color:#8b92b8;border-radius:8px;padding:4px 10px;font-size:11px;cursor:pointer;font-family:Tahoma,sans-serif">خروج</button></div></div><div class="main"><div class="card"><div class="card-title">تسجيل تحصيل جديد</div><div class="fg"><label>اسم المحصّل</label><input id="f-name" placeholder="مثال: أحمد السالم"></div><div class="fg"><label>التاريخ</label><input type="date" id="f-date"></div><div class="fg"><label>المبلغ المحصّل (ريال)</label><input type="number" id="f-amt" placeholder="0.00" min="0" step="0.01"></div><div class="fg"><label>📎 صورة نموذج التسليم (اختياري)</label><input type="file" id="f-img" accept="image/*"><div style="font-size:11px;color:#8b92b8;margin-top:4px">يمكنك التقاط صورة للنموذج الموقّع</div></div><button class="btn btn-blue" id="save-btn" onclick="saveEntry()">حفظ وتأكيد 🔒</button></div><div class="card"><div class="card-title">سجل اليوم</div><div class="summary" id="summary-box" style="display:none"><div class="summary-row"><span>عدد السجلات</span><span id="s-count">0</span></div><div class="summary-row"><span>الإجمالي</span><span id="s-total">0.00 ريال</span></div></div><div class="records" id="records-list"><div class="empty">لا توجد سجلات اليوم</div></div></div></div></div><div class="lightbox" id="lightbox" onclick="document.getElementById('lightbox').classList.remove('show')"><img id="lightbox-img" src=""></div><div class="toast" id="toast"></div><script>const SURL="https://kiaavxvfdscfxmuwepva.supabase.co";const SKEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtpYWF2eHZmZHNjZnhtdXdlcHZhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA2NDkyMjMsImV4cCI6MjA5NjIyNTIyM30.amgsPZQ-RmWzWOvgL7wokFjq2LqZX-zhw9ORoh2HeeM";const PASSWORD="tahseel2026";function checkPass(){var p=document.getElementById('pass-input').value;if(p===PASSWORD){sessionStorage.setItem('auth','1');document.getElementById('login-page').style.display='none';document.getElementById('app-page').style.display='block';init();}else{document.getElementById('login-error').style.display='block';document.getElementById('pass-input').value='';}}function logout(){sessionStorage.removeItem('auth');document.getElementById('app-page').style.display='none';document.getElementById('login-page').style.display='block';document.getElementById('pass-input').value='';}function today(){return new Date().toISOString().split('T')[0];}function fmt(n){return(n||0).toLocaleString('ar-SA',{minimumFractionDigits:2,maximumFractionDigits:2});}function fmtDate(d){if(!d)return'';return new Date(d+'T12:00:00').toLocaleDateString('ar-SA',{year:'numeric',month:'long',day:'numeric'});}function showToast(msg,err){var t=document.getElementById('toast');t.textContent=msg;t.style.background=err?'#ef4444':'#22c55e';t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2500);}async function uploadImage(file,entryId){try{var ext=file.name.split('.').pop();var res=await fetch(SURL+'/storage/v1/object/receipts/'+entryId+'.'+ext,{method:'POST',headers:{'apikey':SKEY,'Authorization':'Bearer '+SKEY,'Content-Type':file.type},body:file});if(res.ok){var imgUrl=SURL+'/storage/v1/object/public/receipts/'+entryId+'.'+ext;await fetch(SURL+'/rest/v1/tahseel_entries?id=eq.'+entryId,{method:'PATCH',headers:{'Content-Type':'application/json','apikey':SKEY,'Authorization':'Bearer '+SKEY},body:JSON.stringify({receipt_image:imgUrl});}}catch(e){console.log(e);}}async function saveEntry(){var name=document.getElementById('f-name').value.trim();var date=document.getElementById('f-date').value;var amt=parseFloat(document.getElementById('f-amt').value);var imgFile=document.getElementById('f-img').files[0];if(!name)return showToast('أدخل اسم المحصّل',true);if(!amt||amt<=0)return showToast('أدخل مبلغاً صحيحاً',true);var btn=document.getElementById('save-btn');btn.disabled=true;btn.textContent='جاري الحفظ...';try{var res=await fetch(SURL+'/rest/v1/tahseel_entries',{method:'POST',headers:{'Content-Type':'application/json','apikey':SKEY,'Authorization':'Bearer '+SKEY,'Prefer':'return=representation'},body:JSON.stringify({collector_name:name,entry_date:date,amount:amt,locked:true})});if(res.ok){var data=await res.json();var entryId=data[0].id;if(imgFile)await uploadImage(imgFile,entryId);document.getElementById('f-name').value='';document.getElementById('f-amt').value='';document.getElementById('f-img').value='';showToast('تم الحفظ والتأكيد ✓');loadToday();}else{showToast('خطأ في الحفظ',true);}}catch(e){showToast('خطأ في الاتصال',true);}btn.disabled=false;btn.textContent='حفظ وتأكيد 🔒';}async function loadToday(){try{var res=await fetch(SURL+'/rest/v1/tahseel_entries?entry_date=eq.'+document.getElementById('f-date').value+'&order=created_at.desc',{headers:{'apikey':SKEY,'Authorization':'Bearer '+SKEY}});var data=await res.json();if(!Array.isArray(data)||!data.length){document.getElementById('records-list').innerHTML='<div class="empty">لا توجد سجلات اليوم</div>';document.getElementById('summary-box').style.display='none';return;}var total=data.reduce(function(s,e){return s+parseFloat(e.amount);},0);document.getElementById('s-count').textContent=data.length;document.getElementById('s-total').textContent=fmt(total)+' ريال';document.getElementById('summary-box').style.display='block';document.getElementById('records-list').innerHTML=data.map(function(e){var imgHtml=e.receipt_image?'<img src="'+e.receipt_image+'" class="img-thumb" onclick="showImg(\''+e.receipt_image+'\')" title="اضغط لتكبير الصورة">':'<div style="font-size:11px;color:#8b92b8;margin-top:4px">لا توجد صورة</div>';return'<div class="record-item"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div class="record-name">👤 '+e.collector_name+'</div><div class="record-date">'+fmtDate(e.entry_date)+'</div></div><div style="text-align:left"><div class="record-amt">'+fmt(parseFloat(e.amount))+' ريال</div><div class="locked">🔒 مقفّل</div></div></div>'+imgHtml+'</div>';}).join('');}catch(e){console.log(e);}}function showImg(url){document.getElementById('lightbox-img').src=url;document.getElementById('lightbox').classList.add('show');}function init(){var y=new Date();y.setDate(y.getDate()-1);document.getElementById('f-date').value=y.toISOString().split('T')[0];loadToday();setInterval(loadToday,30000);}if(sessionStorage.getItem('auth')==='1'){document.getElementById('login-page').style.display='none';document.getElementById('app-page').style.display='block';init();}</script></body></html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>إدخال التحصيل</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Tahoma,sans-serif;background:#0f1117;color:#e8eaf6;min-height:100vh;direction:rtl}
+.header{background:#1a1d27;border-bottom:1px solid #2e3350;padding:16px 20px;display:flex;justify-content:space-between;align-items:center}
+.header h1{font-size:16px;font-weight:700}.header h1 span{color:#4f8ef7}
+.badge{font-size:11px;color:#8b92b8;background:#22263a;padding:4px 10px;border-radius:20px;border:1px solid #2e3350}
+.main{padding:20px;max-width:500px;margin:0 auto}
+.card{background:#1a1d27;border:1px solid #2e3350;border-radius:12px;padding:20px;margin-bottom:16px}
+.card-title{font-size:14px;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.card-title::before{content:'';width:3px;height:16px;background:#4f8ef7;border-radius:2px;display:inline-block}
+.fg{margin-bottom:14px}
+.fg label{font-size:12px;color:#8b92b8;display:block;margin-bottom:5px}
+.fg input{background:#22263a;border:1px solid #2e3350;border-radius:8px;padding:10px 13px;color:#e8eaf6;font-size:14px;outline:none;width:100%;font-family:Tahoma,sans-serif}
+.fg input[type=date]{direction:ltr}
+.fg input[type=file]{padding:8px 13px;cursor:pointer}
+.fg input:focus{border-color:#4f8ef7}
+.btn{width:100%;padding:12px;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;font-family:Tahoma,sans-serif}
+.btn-blue{background:#4f8ef7;color:#fff}
+.btn-blue:disabled{background:#2e3350;color:#8b92b8;cursor:not-allowed}
+.login-box{background:#1a1d27;border:1px solid #2e3350;border-radius:12px;padding:32px 24px;max-width:380px;margin:80px auto}
+.login-title{font-size:18px;font-weight:700;text-align:center;margin-bottom:6px}
+.login-sub{font-size:13px;color:#8b92b8;text-align:center;margin-bottom:24px}
+.login-error{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#ef4444;border-radius:8px;padding:10px;font-size:13px;text-align:center;margin-bottom:14px;display:none}
+.summary{background:#22263a;border-radius:8px;padding:12px;margin-bottom:14px}
+.summary-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #2e3350;font-size:13px}
+.summary-row:last-child{border-bottom:none;font-weight:700;font-size:14px;color:#4f8ef7}
+.records{margin-top:8px}
+.record-item{background:#22263a;border-radius:8px;padding:12px;margin-bottom:8px}
+.record-name{font-size:14px;font-weight:600}
+.record-amt{font-size:16px;font-weight:700;color:#4f8ef7}
+.record-date{font-size:11px;color:#8b92b8;margin-top:2px}
+.locked{font-size:10px;color:#22c55e;background:rgba(34,197,94,.1);padding:2px 8px;border-radius:10px}
+.img-thumb{width:60px;height:60px;object-fit:cover;border-radius:6px;border:1px solid #2e3350;cursor:pointer;margin-top:6px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);padding:10px 20px;border-radius:8px;font-size:13px;font-weight:600;z-index:999;transition:transform .3s;pointer-events:none;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.empty{text-align:center;padding:24px;color:#8b92b8;font-size:13px}
+.lightbox{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.9);z-index:9999;justify-content:center;align-items:center}
+.lightbox img{max-width:90%;max-height:90%;border-radius:8px}
+.lightbox.show{display:flex}
+</style>
+</head>
+<body>
+
+<div id="login-page">
+  <div class="login-box">
+    <div style="text-align:center;font-size:32px;margin-bottom:12px">🔐</div>
+    <div class="login-title">نظام التحصيل النقدي</div>
+    <div class="login-sub">أدخل كلمة المرور للدخول</div>
+    <div class="login-error" id="login-error">كلمة المرور غير صحيحة</div>
+    <div class="fg">
+      <label>كلمة المرور</label>
+      <input type="password" id="pass-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')checkPass()">
+    </div>
+    <button class="btn btn-blue" onclick="checkPass()">دخول ←</button>
+  </div>
+</div>
+
+<div id="app-page" style="display:none">
+  <div class="header">
+    <h1>📋 إدخال <span>التحصيل</span></h1>
+    <div style="display:flex;gap:8px;align-items:center">
+      <div class="badge">مسؤول التسجيل</div>
+      <button onclick="logout()" style="background:transparent;border:1px solid #2e3350;color:#8b92b8;border-radius:8px;padding:4px 10px;font-size:11px;cursor:pointer;font-family:Tahoma,sans-serif">خروج</button>
+    </div>
+  </div>
+  <div class="main">
+    <div class="card">
+      <div class="card-title">تسجيل تحصيل جديد</div>
+      <div class="fg"><label>اسم المحصّل</label><input id="f-name" placeholder="مثال: أحمد السالم"></div>
+      <div class="fg"><label>التاريخ</label><input type="date" id="f-date"></div>
+      <div class="fg"><label>المبلغ المحصّل (ريال)</label><input type="number" id="f-amt" placeholder="0.00" min="0" step="0.01"></div>
+      <div class="fg">
+        <label>📎 صورة نموذج التسليم (اختياري)</label>
+        <input type="file" id="f-img" accept="image/*">
+        <div style="font-size:11px;color:#8b92b8;margin-top:4px">يمكنك التقاط صورة للنموذج الموقّع</div>
+      </div>
+      <button class="btn btn-blue" id="save-btn" onclick="saveEntry()">حفظ وتأكيد 🔒</button>
+    </div>
+    <div class="card">
+      <div class="card-title">سجل اليوم</div>
+      <div class="summary" id="summary-box" style="display:none">
+        <div class="summary-row"><span>عدد السجلات</span><span id="s-count">0</span></div>
+        <div class="summary-row"><span>الإجمالي</span><span id="s-total">0.00 ريال</span></div>
+      </div>
+      <div class="records" id="records-list"><div class="empty">لا توجد سجلات اليوم</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="lightbox" id="lightbox" onclick="document.getElementById('lightbox').classList.remove('show')">
+  <img id="lightbox-img" src="">
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var SURL = "https://kiaavxvfdscfxmuwepva.supabase.co";
+var SKEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtpYWF2eHZmZHNjZnhtdXdlcHZhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA2NDkyMjMsImV4cCI6MjA5NjIyNTIyM30.amgsPZQ-RmWzWOvgL7wokFjq2LqZX-zhw9ORoh2HeeM";
+var PASSWORD = "tahseel2026";
+
+function checkPass(){
+  var p = document.getElementById('pass-input').value;
+  if(p === PASSWORD){
+    sessionStorage.setItem('auth','1');
+    document.getElementById('login-page').style.display='none';
+    document.getElementById('app-page').style.display='block';
+    init();
+  } else {
+    document.getElementById('login-error').style.display='block';
+    document.getElementById('pass-input').value='';
+  }
+}
+
+function logout(){
+  sessionStorage.removeItem('auth');
+  document.getElementById('app-page').style.display='none';
+  document.getElementById('login-page').style.display='block';
+  document.getElementById('pass-input').value='';
+}
+
+function today(){ return new Date().toISOString().split('T')[0]; }
+function fmt(n){ return (n||0).toLocaleString('ar-SA',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function fmtDate(d){ if(!d) return ''; return new Date(d+'T12:00:00').toLocaleDateString('ar-SA',{year:'numeric',month:'long',day:'numeric'}); }
+
+function showToast(msg, err){
+  var t=document.getElementById('toast');
+  t.textContent=msg; t.style.background=err?'#ef4444':'#22c55e';
+  t.classList.add('show'); setTimeout(function(){t.classList.remove('show');},2500);
+}
+
+function uploadImage(file, entryId, callback){
+  var ext = file.name.split('.').pop();
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', SURL+'/storage/v1/object/receipts/'+entryId+'.'+ext);
+  xhr.setRequestHeader('apikey', SKEY);
+  xhr.setRequestHeader('Authorization', 'Bearer '+SKEY);
+  xhr.setRequestHeader('Content-Type', file.type);
+  xhr.onload = function(){
+    if(xhr.status === 200 || xhr.status === 201){
+      var imgUrl = SURL+'/storage/v1/object/public/receipts/'+entryId+'.'+ext;
+      var xhr2 = new XMLHttpRequest();
+      xhr2.open('PATCH', SURL+'/rest/v1/tahseel_entries?id=eq.'+entryId);
+      xhr2.setRequestHeader('Content-Type', 'application/json');
+      xhr2.setRequestHeader('apikey', SKEY);
+      xhr2.setRequestHeader('Authorization', 'Bearer '+SKEY);
+      xhr2.onload = function(){ callback(); };
+      xhr2.onerror = function(){ callback(); };
+      xhr2.send(JSON.stringify({receipt_image: imgUrl}));
+    } else {
+      callback();
+    }
+  };
+  xhr.onerror = function(){ callback(); };
+  xhr.send(file);
+}
+
+function saveEntry(){
+  var name = document.getElementById('f-name').value.trim();
+  var date = document.getElementById('f-date').value;
+  var amt = parseFloat(document.getElementById('f-amt').value);
+  var imgFile = document.getElementById('f-img').files[0];
+  if(!name) return showToast('أدخل اسم المحصّل',true);
+  if(!amt||amt<=0) return showToast('أدخل مبلغاً صحيحاً',true);
+  var btn = document.getElementById('save-btn');
+  btn.disabled=true; btn.textContent='جاري الحفظ...';
+
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', SURL+'/rest/v1/tahseel_entries');
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.setRequestHeader('apikey', SKEY);
+  xhr.setRequestHeader('Authorization', 'Bearer '+SKEY);
+  xhr.setRequestHeader('Prefer', 'return=representation');
+  xhr.onload = function(){
+    if(xhr.status === 201){
+      var data = JSON.parse(xhr.responseText);
+      var entryId = data[0].id;
+      document.getElementById('f-name').value='';
+      document.getElementById('f-amt').value='';
+      document.getElementById('f-img').value='';
+      if(imgFile){
+        uploadImage(imgFile, entryId, function(){
+          showToast('تم الحفظ والتأكيد ✓');
+          loadToday();
+          btn.disabled=false; btn.textContent='حفظ وتأكيد 🔒';
+        });
+      } else {
+        showToast('تم الحفظ والتأكيد ✓');
+        loadToday();
+        btn.disabled=false; btn.textContent='حفظ وتأكيد 🔒';
+      }
+    } else {
+      showToast('خطأ في الحفظ',true);
+      btn.disabled=false; btn.textContent='حفظ وتأكيد 🔒';
+    }
+  };
+  xhr.onerror = function(){
+    showToast('خطأ في الاتصال',true);
+    btn.disabled=false; btn.textContent='حفظ وتأكيد 🔒';
+  };
+  xhr.send(JSON.stringify({collector_name:name, entry_date:date, amount:amt, locked:true}));
+}
+
+function loadToday(){
+  var date = document.getElementById('f-date').value;
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', SURL+'/rest/v1/tahseel_entries?entry_date=eq.'+date+'&order=created_at.desc');
+  xhr.setRequestHeader('apikey', SKEY);
+  xhr.setRequestHeader('Authorization', 'Bearer '+SKEY);
+  xhr.onload = function(){
+    var data = JSON.parse(xhr.responseText);
+    if(!Array.isArray(data)||!data.length){
+      document.getElementById('records-list').innerHTML='<div class="empty">لا توجد سجلات اليوم</div>';
+      document.getElementById('summary-box').style.display='none';
+      return;
+    }
+    var total = data.reduce(function(s,e){return s+parseFloat(e.amount);},0);
+    document.getElementById('s-count').textContent=data.length;
+    document.getElementById('s-total').textContent=fmt(total)+' ريال';
+    document.getElementById('summary-box').style.display='block';
+    document.getElementById('records-list').innerHTML = data.map(function(e){
+      var imgHtml = e.receipt_image
+        ? '<img src="'+e.receipt_image+'" class="img-thumb" onclick="showImg(\''+e.receipt_image+'\')" title="اضغط لتكبير">'
+        : '<div style="font-size:11px;color:#8b92b8;margin-top:4px">لا توجد صورة</div>';
+      return '<div class="record-item"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div class="record-name">👤 '+e.collector_name+'</div><div class="record-date">'+fmtDate(e.entry_date)+'</div></div><div style="text-align:left"><div class="record-amt">'+fmt(parseFloat(e.amount))+' ريال</div><div class="locked">🔒 مقفّل</div></div></div>'+imgHtml+'</div>';
+    }).join('');
+  };
+  xhr.send();
+}
+
+function showImg(url){
+  document.getElementById('lightbox-img').src=url;
+  document.getElementById('lightbox').classList.add('show');
+}
+
+function init(){
+  var y = new Date(); y.setDate(y.getDate()-1);
+  document.getElementById('f-date').value = y.toISOString().split('T')[0];
+  loadToday();
+  setInterval(loadToday, 30000);
+}
+
+if(sessionStorage.getItem('auth')==='1'){
+  document.getElementById('login-page').style.display='none';
+  document.getElementById('app-page').style.display='block';
+  init();
+}
+</script>
+</body>
+</html>
